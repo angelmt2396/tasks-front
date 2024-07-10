@@ -2,23 +2,23 @@ import PropTypes from 'prop-types';
 
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
     return (
-        <div className="flex justify-center space-x-2 mt-4">
+        <div className="flex justify-center items-center space-x-2 mt-4">
             <button
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-300"
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1 || totalPages === 0}
             >
-                Anterior
+                back
             </button>
             <span className="px-4 py-2">
-                Página {totalPages === 0 ? 0 : currentPage} de {totalPages}
+                page     {totalPages === 0 ? 0 : currentPage} de {totalPages}
             </span>
             <button
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-300"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages === 0}
             >
-                Siguiente
+                next
             </button>
         </div>
     );

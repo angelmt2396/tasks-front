@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function ConfirmModal({ message, isOpen, onClose, onConfirm }) {
+export default function     ConfirmModal({ message, isOpen, onClose, onConfirm }) {
     if (!isOpen) return null;
 
     return (
