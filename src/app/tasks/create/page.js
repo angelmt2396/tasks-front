@@ -66,6 +66,11 @@ export default function TaskCreate() {
 
     const handleCreate = async () => {
         try {
+            if (task.startDate === task.endDate) {
+                closeModal();
+                setError('End date must be greater than start date.')
+                return;
+            }
             await createTask(task);
             closeModal();
             window.location.href = '/tasks';
@@ -89,6 +94,7 @@ export default function TaskCreate() {
                         <input
                             type="text"
                             name="name"
+                            maxLength="50"
                             value={task.name}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

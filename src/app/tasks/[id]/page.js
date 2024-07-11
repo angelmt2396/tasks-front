@@ -76,9 +76,18 @@ export default function TaskUpdate({ params }) {
     };
 
     const handleSubmit = async () => {
+        try {
+        if (formData.startDate === formData.endDate) {
+            closeModal();
+            setError('End date must be greater than start date.')
+            return;
+        }
         await updateTask(id, formData);
         closeModal();
         window.location.href = '/tasks';
+        } catch (e) {
+            setError('Something went wrong')
+        }
     };
 
     const openModal = () => {
@@ -95,8 +104,6 @@ export default function TaskUpdate({ params }) {
     const closeModal = () => setIsModalOpen(false);
 
     const handleTeamChange = (e) => {
-        console.log(teamChanged)
-        console.log((!teamChanged && initialEmail !== ''));
         const newTeam = e.target.value;
         setTeam(newTeam);
         setTeamChanged(true);
@@ -139,6 +146,7 @@ export default function TaskUpdate({ params }) {
                         <input
                             type="text"
                             name="name"
+                            maxLength="50"
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -1,6 +1,5 @@
 import TaskItem from './task-item';
 export default function TaskLists ({ tasks }) {
-    console.log(tasks);
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full bg-white table-fixed md:table-auto">

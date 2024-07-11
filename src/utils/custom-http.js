@@ -19,7 +19,6 @@ const createHttpMethods = (baseURL, headers = {}) => {
             return data;
         },
         post: async (config) => {
-            console.log(config)
             const { data } =  await instance.post(config.url, config?.data, config?.config);
             return data;
         }

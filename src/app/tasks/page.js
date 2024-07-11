@@ -69,6 +69,7 @@ export default function Tasks() {
                     <input
                         type="text"
                         value={search}
+                        maxLength="50"
                         onChange={handleSearch}
                         placeholder="Search tasks..."
                         className="px-4 py-2 border rounded"
