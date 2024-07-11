@@ -48,6 +48,7 @@ export default function TaskItem({ task }) {
                     isOpen={isModalOpen}
                     onClose={closeModal}
                     onConfirm={handlerDelete}
+                    confirmText={'Confirm'}
                 />
             </td>
         </tr>

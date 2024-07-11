@@ -12,7 +12,7 @@ export const registerEmail = async ({ teamName, email }) => {
 }
 
 
-export const findAllEmail = async ({ teamName }) => {
-    const { data } =  await httpMethods.get({ url:`/api/v1/teams/${teamName}`});
+export const findAllEmail = async (team) => {
+    const { data } =  await httpMethods.get({ url:`/api/v1/teams/${team}`});
     return data;
 }

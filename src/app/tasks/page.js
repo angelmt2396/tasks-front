@@ -61,7 +61,7 @@ export default function Tasks() {
                         value={search}
                         onChange={handleSearch}
                         placeholder="Search tasks..."
-                        className="px-4 py-2 border rounded-lg"
+                        className="px-4 py-2 border rounded"
                     />
                 </div>
             </header>

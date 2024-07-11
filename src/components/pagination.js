@@ -8,17 +8,17 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1 || totalPages === 0}
             >
-                back
+                Back
             </button>
-            <span className="px-4 py-2">
-                page     {totalPages === 0 ? 0 : currentPage} de {totalPages}
+            <span className="px-4 py-2 text-lg not-italic">
+                {totalPages === 0 ? 0 : currentPage} / {totalPages}
             </span>
             <button
                 className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-300"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages === 0}
             >
-                next
+                Next
             </button>
         </div>
     );
