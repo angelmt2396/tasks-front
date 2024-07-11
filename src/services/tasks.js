@@ -4,7 +4,6 @@ import environments from '../config/environments';
 const httpMethods = createHttpMethods(environments.NEXT_PUBLIC_API_BASE_URL);
 
 export const findAll = async ({ page = 1, limit = 10, order = 'desc' }) => {
-    console.log(environments.NEXT_PUBLIC_API_BASE_URL)
     const config = {
         params: { page: page, limit: limit, order: order }
     }
@@ -31,7 +30,8 @@ export const createTask = async (data) => {
 }
 
 export const updateTask = async (uuid, data) => {
-    data.uuid = uuid;
+    data.uuid = uuid
+    data.isCompleted = data.isCompleted === 'on';
     const body = cleanData(data);
     const config = {
         url: '/api/v1/tasks/update',

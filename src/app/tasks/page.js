@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import Pagination from "@/components/Pagination";
 import Loading from "@/components/loading";
+import {ErrorModal} from "@/components/error-modal";
 
 export default function Tasks() {
     const [tasks, setTasks] = useState([]);
@@ -13,16 +14,22 @@ export default function Tasks() {
     const [totalPages, setTotalPages] = useState(1);
     const [hasData, setHasData] = useState(true);
     const [search, setSearch] = useState('');
-    const [loading, setLoading] = useState(true); // Estado de carga
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const fetchTasks = async (page) => {
-        setLoading(true); // Iniciar carga
-        const data = await findAll({ page: page, order: 'desc' });
-        setTasks(data.data);
-        setFilteredTasks(data.data);
-        setTotalPages(data.pages);
-        setHasData(data.data.length > 0);
-        setLoading(false); // Finalizar carga
+        try {
+            setLoading(true);
+            const data = await findAll({ page: page, order: 'desc' });
+            setTasks(data.data);
+            setFilteredTasks(data.data);
+            setTotalPages(data.pages);
+            setHasData(data.data.length > 0);
+        } catch(e) {
+            setError('Something went wrong')
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -48,8 +55,11 @@ export default function Tasks() {
         return <Loading />;
     }
 
+    const closeErrorModal = () => setError(null);
+
     return (
         <div className="w-full max-w-7xl bg-white p-4 md:p-6 rounded-lg shadow-md mx-auto my-4 md:my-8">
+            {error && <ErrorModal error={error} onClose={closeErrorModal} />}
             <header className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-6">
                 <h1 className="text-xl md:text-2xl font-bold mb-2 md:mb-0">To Do List</h1>
                 <div className="flex space-x-2">

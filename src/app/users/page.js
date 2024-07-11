@@ -16,12 +16,12 @@ export default function CreateUser() {
         try {
             await createUser({email: email, password: password});
             await registerEmail({ teamName: team, email: email });
-            setMessage('Usuario agregado exitosamente.');
+            setMessage('Created successfully.');
         } catch (error) {
-            setMessage('Error al agregar el usuario.');
+            setMessage('Error...');
         }
         closeModal();
-        window.location.href = '/tasks';
+        window.location.href = '/';
     };
 
     const openModal = () => setIsModalOpen(true);
@@ -71,10 +71,11 @@ export default function CreateUser() {
             </form>
             {message && <p className="mt-4 text-center text-green-500">{message}</p>}
             <ConfirmModal
-                message={'¿Estás seguro de que deseas guardar el usuario?'}
+                message={'Are you sure you want to save the user?'}
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 onConfirm={handler}
+                confirmText={'Confirm'}
             />
         </div>
     );

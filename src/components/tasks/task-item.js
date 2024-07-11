@@ -22,13 +22,24 @@ export default function TaskItem({ task }) {
                 {formatLongString(task.name, 15)}
             </td>
             <td className="px-4 py-2 md:px-6 md:py-4">{formatLongString(task.assignedPersonEmail)}</td>
+            <td className="px-4 py-2 md:px-6 md:py-4">
+                {
+                    task.isCompleted ?
+                        <>
+                            <div className="text-albo font-bold text-pretty">Closed
+                            </div>
+                        </>
+                        :
+                        ''
+                }
+            </td>
             <td className="px-4 py-2 md:px-6 md:py-4">{formatDateToView(task.startDate)}</td>
             <td className="px-4 py-2 md:px-6 md:py-4">{formatDateToView(task.endDate)}</td>
             <td className="px-4 py-2 md:px-6 md:py-4 flex justify-between items-center md:justify-start md:space-x-2">
                 <Link href={`/tasks/${task.uuid}`}>
-                    <Image
+                <Image
                         src="/images/edit.png"
-                        alt="Ver más"
+                        alt="see more"
                         width={24}
                         height={24}
                         className="cursor-pointer"
@@ -37,7 +48,7 @@ export default function TaskItem({ task }) {
                 <button onClick={openModal}>
                     <Image
                         src="/images/delete.png"
-                        alt="Eliminar"
+                        alt="delete"
                         width={24}
                         height={24}
                         className="cursor-pointer"

@@ -16,6 +16,10 @@ export default function TaskLists ({ tasks }) {
                     </th>
                     <th className="px-4 py-2 md:px-6 md:py-3
                         text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Resolved
+                    </th>
+                    <th className="px-4 py-2 md:px-6 md:py-3
+                        text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Start Date
                     </th>
                     <th className="px-4 py-2 md:px-6 md:py-3

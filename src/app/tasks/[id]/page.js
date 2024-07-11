@@ -8,6 +8,7 @@ import ConfirmModal from "@/components/confirm-modal";
 import DateTimeInput from "@/components/datetime-input";
 import { findAllEmail } from "@/services/teams";
 import AlertMessage from '@/components/alert';
+import {ErrorModal} from "@/components/error-modal";
 
 export default function TaskUpdate({ params }) {
     const { id } = params;
@@ -19,7 +20,8 @@ export default function TaskUpdate({ params }) {
         assignedPersonEmail: '',
         startDate: '',
         endDate: '',
-        teamName: ''
+        teamName: '',
+        isCompleted: false
     });
     const [emails, setEmails] = useState([]);
     const [alertMessage, setAlertMessage] = useState('');
@@ -27,24 +29,30 @@ export default function TaskUpdate({ params }) {
     const [hasAssignedPersonEmail, setHasAssignedPersonEmail] = useState(false);
     const [initialEmail, setInitialEmail] = useState('');
     const [initialTeam, setInitialTeam] = useState('');
+    const [error, setError] = useState(null);
 
 
     useEffect(() => {
         const fetchTask = async () => {
-            const taskData = await findByUUID(id);
-            setFormData({
-                name: taskData.name || '',
-                description: taskData.description || '',
-                assignedPersonEmail: taskData.assignedPersonEmail || '',
-                startDate: formatDateToInput(taskData.startDate) || '',
-                endDate: formatDateToInput(taskData.endDate) || '',
-                teamName: taskData.team?.name || '',
-            });
-            setInitialTeam(taskData.team?.name);
-            setTeam(taskData.team?.name || '');
-            setHasAssignedPersonEmail(taskData.assignedPersonEmail);
-            setInitialEmail(taskData.assignedPersonEmail);
-            setEmails([taskData.assignedPersonEmail]);
+            try{
+                const taskData = await findByUUID(id);
+                setFormData({
+                    name: taskData.name || '',
+                    description: taskData.description || '',
+                    assignedPersonEmail: taskData.assignedPersonEmail || '',
+                    startDate: formatDateToInput(taskData.startDate) || '',
+                    endDate: formatDateToInput(taskData.endDate) || '',
+                    teamName: taskData.team?.name || '',
+                });
+                setInitialTeam(taskData.team?.name);
+                setTeam(taskData.team?.name || '');
+                setHasAssignedPersonEmail(taskData.assignedPersonEmail);
+                setInitialEmail(taskData.assignedPersonEmail);
+                setEmails([taskData.assignedPersonEmail]);
+            } catch (e) {
+                setError('Something went wrong')
+            }
+
         };
         fetchTask();
     }, [id]);
@@ -117,8 +125,11 @@ export default function TaskUpdate({ params }) {
         }));
     }
 
+    const closeErrorModal = () => setError(null);
+
     return (
         <div className="w-full max-w-7xl bg-white p-4 md:p-6 rounded-lg shadow-md mx-auto my-4 md:my-8">
+            {error && <ErrorModal error={error} onClose={closeErrorModal} />}
             {alertMessage && <AlertMessage message={alertMessage}/>}
             <h1 className="text-2xl font-bold mb-6">Task details</h1>
             <form>
@@ -142,7 +153,8 @@ export default function TaskUpdate({ params }) {
                             onChange={handleSelectEmail}
                             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="">{(!teamChanged && initialEmail) ? initialEmail: 'Select an email...'}</option>
+                            <option
+                                value="">{(!teamChanged && initialEmail) ? initialEmail : 'Select an email...'}</option>
 
                             {emails.map((email, index) => (
                                 <option key={index} value={email}>
@@ -191,16 +203,28 @@ export default function TaskUpdate({ params }) {
                         min={formData.startDate}
                     />
                 </div>
-                <div className="flex justify-end mt-6 space-x-4">
-                    <button type="button"
-                            onClick={openModal}
-                            className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">Save
-                    </button>
-                    <Link href={'/tasks'}>
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+                    <div className="flex space-x-6 mt-6 pt-2 pl-2">
+                        <input
+                            type="checkbox"
+                            name="isCompleted"
+                            checked={formData.isCompleted}
+                            onChange={handleChange}
+                            className="form-checkbox h-5 w-5 text-blue-600"
+                        />
+                        <label className="text-gray-700">Mark as completed</label>
+                    </div>
+                    <div className="flex justify-end mt-6 space-x-4">
                         <button type="button"
-                                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-300">Back
+                                onClick={openModal}
+                                className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">Save
                         </button>
-                    </Link>
+                        <Link href={'/tasks'}>
+                            <button type="button"
+                                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-300">Back
+                            </button>
+                        </Link>
+                    </div>
                 </div>
             </form>
             <ConfirmModal

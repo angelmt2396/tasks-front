@@ -6,6 +6,7 @@ import { createTask } from "@/services/tasks";
 import DateTimeInput from "@/components/datetime-input";
 import { findAllEmail } from "@/services/teams";
 import AlertMessage from "@/components/alert";
+import {ErrorModal} from "@/components/error-modal";
 
 export default function TaskCreate() {
     const [task, setTask] = useState({
@@ -20,6 +21,7 @@ export default function TaskCreate() {
     const [emails, setEmails] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [error, setError] = useState(null);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setTask((prevTask) => ({
@@ -30,9 +32,13 @@ export default function TaskCreate() {
 
     useEffect(() => {
         const fetchEmails = async () => {
-            if (team) {
-                const teamEmails = await findAllEmail(team);
-                setEmails(teamEmails);
+            try {
+                if (team) {
+                    const teamEmails = await findAllEmail(team);
+                    setEmails(teamEmails);
+                }
+            } catch (e) {
+                setError('Something went wrong')
             }
         };
 
@@ -59,13 +65,21 @@ export default function TaskCreate() {
     const closeModal = () => setIsModalOpen(false);
 
     const handleCreate = async () => {
-        await createTask(task);
-        closeModal();
-        window.location.href = '/tasks';
+        try {
+            await createTask(task);
+            closeModal();
+            window.location.href = '/tasks';
+        } catch (e) {
+            closeModal()
+            setError('Something went wrong')
+        }
     };
+
+    const closeErrorModal = () => setError(null);
 
     return (
         <div className="w-full max-w-7xl bg-white p-4 md:p-6 rounded-lg shadow-md mx-auto my-4 md:my-8">
+            {error && <ErrorModal error={error} onClose={closeErrorModal} />}
             {alertMessage && <AlertMessage message={alertMessage}/>} {}
             <h1 className="text-2xl font-bold mb-6">Create a task</h1>
             <form>
