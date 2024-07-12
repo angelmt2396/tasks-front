@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createUser } from "@/services/users";
 import { registerEmail } from "@/services/teams";
 import ConfirmModal from "@/components/confirm-modal";
+import {ErrorModal} from "@/components/error-modal";
 
 export default function CreateUser() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,24 +12,27 @@ export default function CreateUser() {
     const [team, setTeam] = useState('BACKEND');
     const [message, setMessage] = useState('');
 
+    const [error, setError] = useState(null);
     const handler = async (e) => {
         e.preventDefault();
         try {
             await createUser({email: email, password: password});
             await registerEmail({ teamName: team, email: email });
             setMessage('Created successfully.');
+            closeModal();
+            window.location.href = '/';
         } catch (error) {
-            setMessage('Error...');
+            closeModal();
+            setError('Something went wrong')
         }
-        closeModal();
-        window.location.href = '/';
     };
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
+    const closeErrorModal = () => setError(null);
     return (
         <div className="w-full max-w-xl mx-auto bg-white p-12 rounded-lg shadow-md">
+            {error && <ErrorModal error={error} onClose={closeErrorModal} />}
             <h1 className="text-3xl font-bold mb-8 text-center">Add user</h1>
             <form onSubmit={(e) => { e.preventDefault(); openModal(); }}>
                 <div className="mb-6">
